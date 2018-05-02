@@ -1,0 +1,14 @@
+{
+  "bind": {
+    "port": 3005,
+    "host": "0.0.0.0"
+  },
+  "mongo": {
+    "uri": "mongodb://mongodb.io/moviesAPI"
+  },
+  "admin": {
+    "username": "admin",
+    "email": "raphael.alex@gmail.com",
+    "password": "admin12345"
+  }
+}

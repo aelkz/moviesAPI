@@ -1,0 +1,4 @@
+https://timonweb.com/posts/how-to-enable-es6-imports-in-nodejs/
+https://www.infoq.com/br/articles/nodejs-utilizando-modulo-de-cluster
+https://www.sitepoint.com/how-to-create-a-node-js-cluster-for-speeding-up-your-apps/
+http://www.acuriousanimal.com/2017/08/12/understanding-the-nodejs-cluster-module.html

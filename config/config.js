@@ -35,6 +35,8 @@ config.author                   = pkg.author;
 config.keywords                 = pkg.keywords;
 config.engine                   = pkg.engines.node;
 
+config.ga                       = process.env.GA || 'google analytics key';
+
 config.logging                  = process.env.LOGGING || false;
 
 config.mongodb                  = {};

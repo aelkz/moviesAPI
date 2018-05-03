@@ -57,6 +57,7 @@
     "express-async-wrapper": "^0.1.0",
     "express-jwt": "5.3.1",
     "express-session": "1.15.6",
+    "express-sslify": "^1.2.0",
     "express-validator": "^5.1.2",
     "helmet": "^3.12.0",
     "http-errors": "~1.6.2",

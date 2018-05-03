@@ -7,23 +7,32 @@ import initializeDb from './db';
 import middleware from './middleware';
 import api from './api';
 import setupConfig from './lib/setupConfig';
-import configDefaults from '../config/defaults.json';
+//
+import compression from 'compression';
+import config from './../config/config';
+import csrf from 'csurf';
+import expressValidator from 'express-validator';
+import errorHandler from 'errorhandler';
+import helmet from 'helmet';
+import methodOverride from 'method-override';
+import enforce from 'express-sslify';
 
 require('babel-core/register');
 require('babel-polyfill');
 
-var compression       = require('compression')              // https://github.com/expressjs/compression
-var config            = require('./../config/config');      // Get configuration file
-var csrf              = require('csurf');                   // https://github.com/expressjs/csurf
-var expressValidator  = require('express-validator');       // https://npmjs.org/package/express-validator
-var errorHandler      = require('errorhandler');            // https://github.com/expressjs/errorhandler
-var helmet            = require('helmet');                  // https://github.com/evilpacket/helmet
-var methodOverride    = require('method-override');         // https://github.com/expressjs/method-override
+//var compression       = require('compression')              // https://github.com/expressjs/compression
+//var config            = require('./../config/config');      // Get configuration file
+//var csrf              = require('csurf');                   // https://github.com/expressjs/csurf
+//var expressValidator  = require('express-validator');       // https://npmjs.org/package/express-validator
+//var errorHandler      = require('errorhandler');            // https://github.com/expressjs/errorhandler
+//var helmet            = require('helmet');                  // https://github.com/evilpacket/helmet
+//var methodOverride    = require('method-override');         // https://github.com/expressjs/method-override
+let debug               = require('debug')('skeleton');       // https://github.com/visionmedia/debug
 
-var minute = 1000 * 60;   //     60000
-var hour = (minute * 60); //   3600000
-var day  = (hour * 24);   //  86400000
-var week = (day * 7);     // 604800000
+let minute = 1000 * 60;   //     60000
+let hour = (minute * 60); //   3600000
+let day  = (hour * 24);   //  86400000
+let week = (day * 7);     // 604800000
 
 const cluster = require('cluster');
 
@@ -59,8 +68,6 @@ app.use(expressValidator());
 // Compress response data with gzip / deflate.
 // This middleware should be placed "high" within
 // the stack to ensure all responses are compressed.
-app.use(compression({filter: shouldCompress}))
-
 function shouldCompress(req, res) {
     if (req.headers['x-no-compression']) {
         // don't compress responses with this request header
@@ -69,6 +76,8 @@ function shouldCompress(req, res) {
     // fallback to standard filter function
     return compression.filter(req, res)
 }
+
+app.use(compression({filter: shouldCompress}));
 
 // http://en.wikipedia.org/wiki/HTTP_ETag
 // Google has a nice article about "strong" and "weak" caching.
@@ -100,13 +109,14 @@ app.use(helmet.noSniff());            // Sets X-Content-Type-Options to nosniff
 app.use(helmet.xssFilter());          // sets the X-XSS-Protection header
 app.use(helmet.frameguard('deny'));   // Prevent iframe clickjacking
 
-var isProduction = app.get('env') === 'production';
+let isProduction = app.get('env') === 'production';
 
 if (isProduction) {
     app.locals.pretty = false;
     app.locals.compileDebug = false;
     // Enable If behind nginx, proxy, or a load balancer (e.g. Heroku, Nodejitsu)
-    app.enable('trust proxy', 1);  // trust first proxy
+    //app.enable('trust proxy', 1);  // trust first proxy
+
     // Since our application has signup, login, etc. forms these should be protected
     // with SSL encryption. Heroku, Nodejitsu and other hosters often use reverse
     // proxies or load balancers which offer SSL endpoints (but then forward unencrypted
@@ -127,7 +137,7 @@ if (isProduction) {
     // visit by HTTPS for the next ninety days:
     // TODO: should we actually have this *and* app.use(enforce.HTTPS(true)); above?
     //       this seems more flexible rather than a hard redirect.
-    var ninetyDaysInMilliseconds = 7776000000;
+    let ninetyDaysInMilliseconds = 7776000000;
     app.use(helmet.hsts({ maxAge: ninetyDaysInMilliseconds }));
     // Turn on HTTPS/SSL cookies
     config.session.proxy = true;
@@ -201,10 +211,15 @@ const jsonErrorHandler = (err, req, res, next) => {
 };
 
 const initApp = async () => {
+    console.log('debug 1');
     const db = await initializeDb({ config });
+    console.log('debug 2');
     await setupConfig();
+    console.log('debug 3');
     app.use(middleware({ config, db }));
+    console.log('debug 4');
     app.use('/', api({ config, db }));
+    console.log('debug 5');
     app.use(jsonErrorHandler);
     return app;
 };
@@ -224,7 +239,7 @@ const bindClusteredApp = async (appToBind) => {
 
         console.log('master cluster setting up ' + numWorkers + ' workers...');
 
-        for (var i = 0; i < numWorkers; i++) {
+        for (let i = 0; i < numWorkers; i++) {
             cluster.fork();
         }
 

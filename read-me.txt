@@ -24,3 +24,8 @@ https://github.com/dstroot/skeleton/blob/master/app.js
 https://github.com/gothinkster/realworld
 # gulp example
 https://github.com/dstroot/skeleton/blob/master/gulpfile.js
+# security
+https://blog.jscrambler.com/setting-up-5-useful-middlewares-for-an-express-api/
+https://medium.com/@andy.neale/securing-node-web-applications-5d5f9bc21926
+http://scottksmith.com/blog/2014/09/21/protect-your-node-apps-noggin-with-helmet/
+https://github.com/helmetjs/helmet

@@ -81,11 +81,22 @@ app.set('etag', true);  // other values 'weak', 'strong'
 // in your app you need methodOverride.
 app.use(methodOverride());
 
-// security Settings
+/**
+ * security Settings:
+ *
+ * Cross Domain protection for Flash content
+ * Removing the X-Powered-by header
+ * HSTS support
+ * X-Download-Options for IE8+
+ * Proper Cache-control headers
+ * Clickjacking Protection
+ * XSS Protection via the X-XSS-Protection header
+ */
 app.disable('x-powered-by');          // Don't advertise our server type
 app.use(csrf());                      // Prevent Cross-Site Request Forgery
-app.use(helmet.ienoopen());           // X-Download-Options for IE8+
-app.use(helmet.nosniff());            // Sets X-Content-Type-Options to nosniff
+app.use(helmet());
+//app.use(helmet.ienoopen());           // X-Download-Options for IE8+
+//app.use(helmet.nosniff());            // Sets X-Content-Type-Options to nosniff
 app.use(helmet.xssFilter());          // sets the X-XSS-Protection header
 app.use(helmet.frameguard('deny'));   // Prevent iframe clickjacking
 

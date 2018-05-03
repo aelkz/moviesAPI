@@ -24,7 +24,7 @@
   ],
   "private": true,
   "scripts": {
-    "dev": "nodemon -w src --exec \"babel-node src/run.js\"",
+    "dev": "nodemon -w src --exec \"DEBUG=app babel-node src/run.js\"",
     "build": "babel src -s -D -d dist",
     "prod": "node dist/run.js",
     "start": "node dist/run.js",
@@ -45,6 +45,7 @@
     "bcrypt": "^1.0.3",
     "body-parser": "1.18.2",
     "cluster": "^0.7.7",
+    "colors": "^1.2.3",
     "compression": "^1.7.2",
     "cookie-parser": "~1.4.3",
     "cors": "2.8.4",

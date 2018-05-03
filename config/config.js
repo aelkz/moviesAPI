@@ -64,7 +64,6 @@ config.session.cookie.maxAge    = process.env.SESSION_MAX_AGE || week;
 
 config.bind                     = {};
 config.bind.port                = 3005;
-config.bind.port                = '0.0.0.0';
 
 config.mongo                    = {};
 config.mongo.uri                = 'mongodb://mongodb.io/moviesAPI';

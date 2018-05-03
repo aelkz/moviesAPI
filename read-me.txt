@@ -22,6 +22,7 @@ https://github.com/luizdesign/nodejs-api-skeleton
 https://github.com/dstroot/skeleton
 https://github.com/dstroot/skeleton/blob/master/app.js
 https://github.com/gothinkster/realworld
+https://github.com/sahat/hackathon-starter
 # gulp example
 https://github.com/dstroot/skeleton/blob/master/gulpfile.js
 # security

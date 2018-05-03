@@ -16,9 +16,10 @@ import enforce from 'express-sslify';
 import cors from 'cors';
 import morgan from 'morgan';
 
-let debug               = require('debug')('skeleton');       // https://github.com/visionmedia/debug
+let debug               = require('debug')('app');       // https://github.com/visionmedia/debug
 let babelCore           = require('babel-core/register');
 let babelPolyfill       = require('babel-polyfill');
+let colors              = require('colors');
 
 let minute = 1000 * 60;   //     60000
 let hour = (minute * 60); //   3600000
@@ -148,6 +149,10 @@ if (isProduction) {
 }
 
 if (!isProduction) {
+    if (!cluster.isMaster) {
+        debug('development mode enabled'.bgRed.bold);
+    }
+
     // logger
     app.use(morgan('dev'));
     app.use(errorHandler);
@@ -165,7 +170,7 @@ if (!isProduction) {
 // development error handler will print stacktrace
 if (!isProduction) {
     app.use(function(err, req, res, next) {
-        console.log(err.stack);
+        debug(err.stack.red);
         debug('Error: ' + (err.status || 500).toString().red.bold + ' ' + err);
 
         res.status(err.status || 500);
@@ -199,15 +204,10 @@ app.use(function (req, res, next) {
 });
 
 const initApp = async (config) => {
-    console.log('debug 1');
     const db = await initializeDb({ config });
-    console.log('debug 2');
     await setupConfig();
-    console.log('debug 3');
     app.use(middleware({ config, db }));
-    console.log('debug 4');
     app.use('/', api({ config, db }));
-    console.log('debug 5');
     app.use(jsonErrorHandler);
     return app;
 };
@@ -217,32 +217,32 @@ const bindClusteredApp = async (appToBind) => {
         // Count the machine's CPUs
         const numWorkers = require('os').cpus().length;
 
-        console.log('master cluster setting up ' + numWorkers + ' workers...');
+        debug('master cluster setting up ' + numWorkers + ' workers'.bgMagenta);
 
         for (let i = 0; i < numWorkers; i++) {
             cluster.fork();
         }
 
         cluster.on('online', function(worker) {
-            console.log('worker PID ' + worker.process.pid + ' is online');
+            debug('worker PID ' + worker.process.pid + ' ' + 'is online'.green.bold);
         });
 
         cluster.on('exit', function(worker, code, signal) {
-            console.log('worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
-            console.log('starting a new worker');
+            debug('worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
+            debug('starting a new worker');
             cluster.fork();
         });
 
     } else {
         appToBind.server.listen(config.bind.port, config.bind.host, () => {
-            console.log(`started on port ${appToBind.server.address().port}`);
+            debug(`started on port ${appToBind.server.address().port}`);
         });
     }
 
     if (cluster.isWorker) {
-        console.log(`   worker ${cluster.worker.id} with PID ${cluster.worker.process.pid} started`);
+        debug('   ' + `worker ${cluster.worker.id} with PID ${cluster.worker.process.pid} started`.white.bold);
         setInterval(function(){
-            console.log(`   processing job from worker ${cluster.worker.id}`);
+            debug(`   processing job from worker ${cluster.worker.id}`);
         }, 3000);
     }
 };

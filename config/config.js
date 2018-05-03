@@ -33,7 +33,7 @@ config.description              = pkg.description;
 config.company                  = pkg.company;
 config.author                   = pkg.author;
 config.keywords                 = pkg.keywords;
-config.engine                   = pkg.engines.node || pkg.engines.iojs;
+config.engine                   = pkg.engines.node;
 
 config.logging                  = process.env.LOGGING || false;
 

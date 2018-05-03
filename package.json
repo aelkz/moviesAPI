@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "simple skeleteon app based on imdb movie metadata",
   "author": "raphael abreu",
+  "company": "aelkz",
   "keywords": [
     "skeleton",
     "node",
@@ -33,6 +34,9 @@
     "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
     "stop": "lsof -ti :3000 | xargs kill",
     "mongo:stop": "docker stop realworld-mongo && docker rm realworld-mongo"
+  },
+  "engines": {
+    "node": "4.x.x"
   },
   "dependencies": {
     "babel-core": "^6.9.0",

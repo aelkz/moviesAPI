@@ -13,11 +13,10 @@ require('babel-core/register');
 require('babel-polyfill');
 
 var compression       = require('compression')              // https://github.com/expressjs/compression
-var config            = require('./config/config');         // Get configuration file
+var config            = require('./../config/config');      // Get configuration file
 var csrf              = require('csurf');                   // https://github.com/expressjs/csurf
 var expressValidator  = require('express-validator');       // https://npmjs.org/package/express-validator
 var errorHandler      = require('errorhandler');            // https://github.com/expressjs/errorhandler
-var flash             = require('express-flash');           // https://npmjs.org/package/express-flash
 var helmet            = require('helmet');                  // https://github.com/evilpacket/helmet
 var methodOverride    = require('method-override');         // https://github.com/expressjs/method-override
 
@@ -169,16 +168,13 @@ if (!isProduction) {
     app.use(errorHandler());
 }
 
-// Keep user, csrf token and config available
+// keep user, csrf token and config available
 app.use(function (req, res, next) {
     res.locals.user = req.user; // will exists if using some IDP
     res.locals.config = config;
     res.locals._csrf = req.csrfToken();
     next();
 });
-
-// Flash messages
-app.use(flash());
 
 // https://github.com/expressjs/session
 // app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));

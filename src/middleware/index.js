@@ -7,7 +7,7 @@ import { Router } from 'express';
 *  we can use this for doing validation,authetication
 *  for every route started with /api
 --------------------------------------------------------*/
-export default () => {
+export default ({ config, db }) => {
     const router = Router();
 
     // add middleware here

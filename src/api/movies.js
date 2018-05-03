@@ -6,6 +6,25 @@ export default () => {
     // express.Router
     const api = Router();
 
+    /**
+     Provide Api for Model
+
+     Model list  GET /api/v1/models
+
+     @header
+        Authorization: Bearer {token}
+     @optionalQueryParameters
+        param1 {String} - description
+        param2 {String} - description
+
+     Model create  POST /api/v1/models
+     @header
+        Authorization: Bearer {token}
+     @params
+         param1 {string}
+         param2 {boolean}
+     **/
+
     /************************************************************************
      * RESOURCE 01 - /livros                                                *
      * URI para busca (GET) e cadastro (POST) de livros                     *
@@ -13,6 +32,19 @@ export default () => {
      * *********************************************************************/
     api.route('/livros')
         .get(function(req,res) {
+
+            //validation
+            req.assert('name','Name is required').notEmpty();
+            req.assert('email','A valid email is required').isEmail();
+            req.assert('password','Enter a password 6 - 20').len(6,20);
+
+            var errors = req.validationErrors();
+
+            if(errors){
+                res.status(422).json(errors);
+                return;
+            }
+
             // recupera todos (verbo:GET)
             Movie.find(function(err,livros) {
                 if(err) {
@@ -28,6 +60,19 @@ export default () => {
             livro.save(livro);
             res.status(201).send(livro);
         });
+
+    /*------------------------------------------------------
+    route.all is extremely useful. you can use it to do
+    stuffs for specific routes. for example you need to do
+    a validation everytime route /api/user/:user_id it hit.
+
+    remove api.all() if you dont want it
+    ------------------------------------------------------*/
+    //api.all(function(req,res,next){
+    //    console.log("You need to do something about api Route? Do it here");
+    //    console.log(req.params);
+    //    next();
+    //});
 
     /************************************************************************
      * RESOURCE 02 INTERNO - /livros/:livroId                               *

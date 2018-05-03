@@ -2,6 +2,14 @@ FROM alpine:3.6
 
 ENV NODE_ENV production
 
+# docker build -t moviesAPI .
+
+# docker-compose up
+# docker-compose -f test.docker-compose.yml up
+
+# https://github.com/gliderlabs/docker-alpine/blob/master/docs/usage.md
+# https://www.cyberciti.biz/faq/10-alpine-linux-apk-command-examples/
+
 # Update & install required packages
 RUN apk add --update nodejs bash git yarn
 

@@ -1,0 +1,11 @@
+version: '3'
+services:
+  lint:
+    container_name: lint
+    build: .
+    volumes:
+      - ./app:/var/www/app/
+      - ./package.json:/var/www/package.json
+      - ./.eslintrc.js:/var/www/.eslintrc.js
+      - ./node_modules:/var/www/node_modules
+    command: sh -c "npm install && npm run lint"

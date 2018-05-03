@@ -4,7 +4,8 @@
     "host": "0.0.0.0"
   },
   "mongo": {
-    "uri": "mongodb://mongodb.io/moviesAPI"
+    "uri": "mongodb://mongodb.io/moviesAPI",
+    "debug": true
   },
   "admin": {
     "username": "admin",

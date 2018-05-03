@@ -1,9 +1,21 @@
 # Specifies intentionally untracked files to ignore when using Git
 # http://git-scm.com/docs/gitignore
 
-*~
-*.sw[mnpcod]
+# Always-ignore extensions
+##########################
+*.diff
+*.err
+*.orig
 *.log
+*.rej
+*.swo
+*.swp
+*.zip
+*.vi
+*~
+*.sass-cache
+*.ruby-version
+*.sw[mnpcod]
 *.tmp
 *.tmp.*
 log.txt
@@ -12,6 +24,8 @@ log.txt
 .vscode/
 npm-debug.log*
 
+# OS/Editor
+##########################
 .idea/
 .sass-cache/
 .tmp/
@@ -28,7 +42,22 @@ plugins/android.json
 plugins/ios.json
 www/
 $RECYCLE.BIN/
-
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
+
+# Node files
+##########################
+npm-debug.log
+node_modules
+.idea
+*.iml
+
+# Configuration
+##########################
+env.json
+.env
+
+# Logging
+##########################
+skeleton.log

@@ -1,9 +1,8 @@
 import http from 'http';
-import express from 'express';
+import express from 'express';                              // https://npmjs.org/package/express
 import cors from 'cors';
 import morgan from 'morgan';
-import bodyParser from 'body-parser';
-import nodeEnvConfiguration from 'node-env-configuration';
+import bodyParser from 'body-parser';                       // https://github.com/expressjs/body-parser
 import initializeDb from './db';
 import middleware from './middleware';
 import api from './api';
@@ -13,27 +12,176 @@ import configDefaults from '../config/defaults.json';
 require('babel-core/register');
 require('babel-polyfill');
 
+var compression       = require('compression')              // https://github.com/expressjs/compression
+var config            = require('./config/config');         // Get configuration file
+var csrf              = require('csurf');                   // https://github.com/expressjs/csurf
+var expressValidator  = require('express-validator');       // https://npmjs.org/package/express-validator
+var errorHandler      = require('errorhandler');            // https://github.com/expressjs/errorhandler
+var flash             = require('express-flash');           // https://npmjs.org/package/express-flash
+var helmet            = require('helmet');                  // https://github.com/evilpacket/helmet
+var methodOverride    = require('method-override');         // https://github.com/expressjs/method-override
+
+var minute = 1000 * 60;   //     60000
+var hour = (minute * 60); //   3600000
+var day  = (hour * 24);   //  86400000
+var week = (day * 7);     // 604800000
+
 const cluster = require('cluster');
 
-const config = nodeEnvConfiguration({
-    defaults: configDefaults,
-    prefix: 'api',
-});
-
-const app = express();
+const app = module.exports = express();  // export app for testing ;)
 app.server = http.createServer(app);
+// var io     = require('socket.io')(server);
 
-// logger
-app.use(morgan('dev'));
+app.locals.application  = config.name;
+app.locals.version      = config.version;
+app.locals.description  = config.description;
+app.locals.author       = config.author;
+app.locals.keywords     = config.keywords;
+app.locals.ga           = config.ga;
 
 // 3rd party middleware
+// https://github.com/expressjs/cors
 app.use(cors({
     exposedHeaders: config.corsHeaders,
 }));
 
+// Body parsing middleware supporting
+// JSON, urlencoded, and multipart requests.
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(bodyParser.json({
     limit: config.bodyLimit,
 }));
+
+// Easy form validation!
+// This line must be immediately after bodyParser!
+app.use(expressValidator());
+
+// Compress response data with gzip / deflate.
+// This middleware should be placed "high" within
+// the stack to ensure all responses are compressed.
+app.use(compression({filter: shouldCompress}))
+
+function shouldCompress(req, res) {
+    if (req.headers['x-no-compression']) {
+        // don't compress responses with this request header
+        return false
+    }
+    // fallback to standard filter function
+    return compression.filter(req, res)
+}
+
+// http://en.wikipedia.org/wiki/HTTP_ETag
+// Google has a nice article about "strong" and "weak" caching.
+// It's worth a quick read if you don't know what that means.
+// https://developers.google.com/speed/docs/best-practices/caching
+app.set('etag', true);  // other values 'weak', 'strong'
+
+// If you want to simulate DELETE and PUT
+// in your app you need methodOverride.
+app.use(methodOverride());
+
+// security Settings
+app.disable('x-powered-by');          // Don't advertise our server type
+app.use(csrf());                      // Prevent Cross-Site Request Forgery
+app.use(helmet.ienoopen());           // X-Download-Options for IE8+
+app.use(helmet.nosniff());            // Sets X-Content-Type-Options to nosniff
+app.use(helmet.xssFilter());          // sets the X-XSS-Protection header
+app.use(helmet.frameguard('deny'));   // Prevent iframe clickjacking
+
+var isProduction = app.get('env') === 'production';
+
+if (isProduction) {
+    app.locals.pretty = false;
+    app.locals.compileDebug = false;
+    // Enable If behind nginx, proxy, or a load balancer (e.g. Heroku, Nodejitsu)
+    app.enable('trust proxy', 1);  // trust first proxy
+    // Since our application has signup, login, etc. forms these should be protected
+    // with SSL encryption. Heroku, Nodejitsu and other hosters often use reverse
+    // proxies or load balancers which offer SSL endpoints (but then forward unencrypted
+    // HTTP traffic to the server).  This makes it simpler for us since we don't have to
+    // setup HTTPS in express. When in production we can redirect all traffic to SSL
+    // by using a little middleware.
+    //
+    // In case of a non-encrypted HTTP request, enforce.HTTPS() automatically
+    // redirects to an HTTPS address using a 301 permanent redirect. BE VERY
+    // CAREFUL with this! 301 redirects are cached by browsers and should be
+    // considered permanent.
+    //
+    // NOTE: Use `enforce.HTTPS(true)` if you are behind a proxy or load
+    // balancer that terminates SSL for you (e.g. Heroku, Nodejitsu).
+    app.use(enforce.HTTPS(true));
+    // This tells browsers, "hey, only use HTTPS for the next period of time".
+    // This will set the Strict Transport Security header, telling browsers to
+    // visit by HTTPS for the next ninety days:
+    // TODO: should we actually have this *and* app.use(enforce.HTTPS(true)); above?
+    //       this seems more flexible rather than a hard redirect.
+    var ninetyDaysInMilliseconds = 7776000000;
+    app.use(helmet.hsts({ maxAge: ninetyDaysInMilliseconds }));
+    // Turn on HTTPS/SSL cookies
+    config.session.proxy = true;
+    config.session.cookie.secure = true;
+}
+
+if (isProduction) {
+    // production error handler no stacktraces leaked to user
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        debug('Error: ' + (err.status || 500).toString().red.bold + ' ' + err);
+        res.json({'errors': {
+            message: err.message,
+            error: {}  // don't leak information
+        }});
+    });
+}
+
+if (!isProduction) {
+    // logger
+    app.use(morgan('dev'));
+    app.use(errorhandler());
+    // Jade options: Don't minify html, debug intrumentation
+    app.locals.pretty = true;
+    app.locals.compileDebug = true;
+    // Turn on console logging in development
+    app.use(morgan('dev'));
+    // Turn off caching in development
+    // This sets the Cache-Control HTTP header to no-store, no-cache,
+    // which tells browsers not to cache anything.
+    app.use(helmet.nocache());
+}
+
+// development error handler will print stacktrace
+if (!isProduction) {
+    app.use(function(err, req, res, next) {
+        console.log(err.stack);
+        debug('Error: ' + (err.status || 500).toString().red.bold + ' ' + err);
+
+        res.status(err.status || 500);
+
+        res.json({'errors': {
+            message: err.message,
+            error: err
+        }});
+    });
+
+    // Final error catch-all just in case...
+    app.use(errorHandler());
+}
+
+// Keep user, csrf token and config available
+app.use(function (req, res, next) {
+    res.locals.user = req.user; // will exists if using some IDP
+    res.locals.config = config;
+    res.locals._csrf = req.csrfToken();
+    next();
+});
+
+// Flash messages
+app.use(flash());
+
+// https://github.com/expressjs/session
+// app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
 
 const jsonErrorHandler = (err, req, res, next) => {
     // console.error(err.stack)
@@ -53,6 +201,14 @@ const initApp = async () => {
     app.use(jsonErrorHandler);
     return app;
 };
+
+// Dynamically include routes (via controllers)
+//fs.readdirSync('./controllers').forEach(function (file) {
+//    if (file.substr(-3) === '.js') {
+//        var route = require('./controllers/' + file);
+//        route.controller(app);
+//    }
+//});
 
 const bindClusteredApp = async (appToBind) => {
     if (cluster.isMaster) {

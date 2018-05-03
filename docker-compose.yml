@@ -1,0 +1,13 @@
+version: '3'
+services:
+  api:
+    container_name: api
+    build: .
+    ports:
+      - "3000:3000"
+    working_dir: /var/www/
+    volumes:
+      - ./app:/var/www/app/
+      - ./package.json:/var/www/package.json
+      - ./node_modules:/var/www/node_modules
+    command: sh -c "npm install && npm start"

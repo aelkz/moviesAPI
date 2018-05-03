@@ -29,7 +29,6 @@ const cluster = require('cluster');
 
 const app = module.exports = express();  // export app for testing ;)
 app.server = http.createServer(app);
-// var io     = require('socket.io')(server);
 
 app.locals.application  = config.name;
 app.locals.version      = config.version;
@@ -91,12 +90,13 @@ app.use(methodOverride());
  * Proper Cache-control headers
  * Clickjacking Protection
  * XSS Protection via the X-XSS-Protection header
+ * src: https://github.com/helmetjs/helmet
  */
 app.disable('x-powered-by');          // Don't advertise our server type
 app.use(csrf());                      // Prevent Cross-Site Request Forgery
 app.use(helmet());
-//app.use(helmet.ienoopen());           // X-Download-Options for IE8+
-//app.use(helmet.nosniff());            // Sets X-Content-Type-Options to nosniff
+app.use(helmet.ieNoOpen());           // X-Download-Options for IE8+
+app.use(helmet.noSniff());            // Sets X-Content-Type-Options to nosniff
 app.use(helmet.xssFilter());          // sets the X-XSS-Protection header
 app.use(helmet.frameguard('deny'));   // Prevent iframe clickjacking
 
@@ -149,7 +149,7 @@ if (isProduction) {
 if (!isProduction) {
     // logger
     app.use(morgan('dev'));
-    app.use(errorhandler());
+    app.use(errorHandler);
     // Jade options: Don't minify html, debug intrumentation
     app.locals.pretty = true;
     app.locals.compileDebug = true;
@@ -158,7 +158,7 @@ if (!isProduction) {
     // Turn off caching in development
     // This sets the Cache-Control HTTP header to no-store, no-cache,
     // which tells browsers not to cache anything.
-    app.use(helmet.nocache());
+    app.use(helmet.noCache());
 }
 
 // development error handler will print stacktrace
@@ -176,7 +176,7 @@ if (!isProduction) {
     });
 
     // Final error catch-all just in case...
-    app.use(errorHandler());
+    app.use(errorHandler);
 }
 
 // keep user, csrf token and config available

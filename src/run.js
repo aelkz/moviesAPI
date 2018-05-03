@@ -1,3 +1,5 @@
 import { initApp, bindClusteredApp } from '.';
 
-initApp().then(app => bindClusteredApp(app));
+var config = require('../config/config');
+
+initApp(config).then(app => bindClusteredApp(app));

@@ -1,11 +1,3 @@
-import nodeEnvConfiguration from 'node-env-configuration';
-import configDefaults from '../../config/defaults.json';
-
-const config = nodeEnvConfiguration({
-    defaults: configDefaults,
-    prefix: 'api',
-});
-
 const execute = async () => {
     // const adminUser = await signup(params);
     // adminUser.role = 'admin';

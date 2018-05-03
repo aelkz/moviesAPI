@@ -11,10 +11,10 @@ export default ({ config, db }) => {
     const router = Router();
 
     // add middleware here
-    router.use(function(req, res, next) {
-        console.log(req.method, req.url);
-        next();
-    });
+    //router.use(function(req, res, next) {
+    //    console.log(req.method, req.url);
+    //    next();
+    //});
 
     return router;
 };

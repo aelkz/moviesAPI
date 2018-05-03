@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
 
-function urlValidator(v, cb) {
+const urlValidator = (v, cb) => {
     setTimeout(function() {
         var regex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
         var msg = v + ' is not a valid URL';

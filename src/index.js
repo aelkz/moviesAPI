@@ -1,33 +1,24 @@
 import http from 'http';
-import express from 'express';                              // https://npmjs.org/package/express
-import cors from 'cors';
-import morgan from 'morgan';
-import bodyParser from 'body-parser';                       // https://github.com/expressjs/body-parser
+import express from 'express';
+import bodyParser from 'body-parser';
 import initializeDb from './db';
 import middleware from './middleware';
 import api from './api';
 import setupConfig from './lib/setupConfig';
-//
-import compression from 'compression';
-import config from './../config/config';
-import csrf from 'csurf';
+import config from '../config/config';
 import expressValidator from 'express-validator';
+import methodOverride from 'method-override';
+import compression from 'compression';
+import csrf from 'csurf';
 import errorHandler from 'errorhandler';
 import helmet from 'helmet';
-import methodOverride from 'method-override';
 import enforce from 'express-sslify';
+import cors from 'cors';
+import morgan from 'morgan';
 
-require('babel-core/register');
-require('babel-polyfill');
-
-//var compression       = require('compression')              // https://github.com/expressjs/compression
-//var config            = require('./../config/config');      // Get configuration file
-//var csrf              = require('csurf');                   // https://github.com/expressjs/csurf
-//var expressValidator  = require('express-validator');       // https://npmjs.org/package/express-validator
-//var errorHandler      = require('errorhandler');            // https://github.com/expressjs/errorhandler
-//var helmet            = require('helmet');                  // https://github.com/evilpacket/helmet
-//var methodOverride    = require('method-override');         // https://github.com/expressjs/method-override
 let debug               = require('debug')('skeleton');       // https://github.com/visionmedia/debug
+let babelCore           = require('babel-core/register');
+let babelPolyfill       = require('babel-polyfill');
 
 let minute = 1000 * 60;   //     60000
 let hour = (minute * 60); //   3600000
@@ -36,7 +27,7 @@ let week = (day * 7);     // 604800000
 
 const cluster = require('cluster');
 
-const app = module.exports = express();  // export app for testing ;)
+const app = express();
 app.server = http.createServer(app);
 
 app.locals.application  = config.name;
@@ -65,6 +56,10 @@ app.use(bodyParser.json({
 // This line must be immediately after bodyParser!
 app.use(expressValidator());
 
+// If you want to simulate DELETE and PUT
+// in your app you need methodOverride.
+app.use(methodOverride());
+
 // Compress response data with gzip / deflate.
 // This middleware should be placed "high" within
 // the stack to ensure all responses are compressed.
@@ -84,10 +79,6 @@ app.use(compression({filter: shouldCompress}));
 // It's worth a quick read if you don't know what that means.
 // https://developers.google.com/speed/docs/best-practices/caching
 app.set('etag', true);  // other values 'weak', 'strong'
-
-// If you want to simulate DELETE and PUT
-// in your app you need methodOverride.
-app.use(methodOverride());
 
 /**
  * security Settings:
@@ -189,17 +180,6 @@ if (!isProduction) {
     app.use(errorHandler);
 }
 
-// keep user, csrf token and config available
-app.use(function (req, res, next) {
-    res.locals.user = req.user; // will exists if using some IDP
-    res.locals.config = config;
-    res.locals._csrf = req.csrfToken();
-    next();
-});
-
-// https://github.com/expressjs/session
-// app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
-
 const jsonErrorHandler = (err, req, res, next) => {
     // console.error(err.stack)
     if (!err) return next();
@@ -210,7 +190,15 @@ const jsonErrorHandler = (err, req, res, next) => {
     });
 };
 
-const initApp = async () => {
+// keep user, csrf token and config available
+app.use(function (req, res, next) {
+    res.locals.user = req.user; // will exists if using some IDP
+    res.locals.config = config;
+    res.locals._csrf = req.csrfToken();
+    next();
+});
+
+const initApp = async (config) => {
     console.log('debug 1');
     const db = await initializeDb({ config });
     console.log('debug 2');
@@ -223,14 +211,6 @@ const initApp = async () => {
     app.use(jsonErrorHandler);
     return app;
 };
-
-// Dynamically include routes (via controllers)
-//fs.readdirSync('./controllers').forEach(function (file) {
-//    if (file.substr(-3) === '.js') {
-//        var route = require('./controllers/' + file);
-//        route.controller(app);
-//    }
-//});
 
 const bindClusteredApp = async (appToBind) => {
     if (cluster.isMaster) {

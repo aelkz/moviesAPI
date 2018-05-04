@@ -62,6 +62,9 @@ config.session.cookie.httpOnly  = true;   // Reduce XSS attack vector
 config.session.cookie.secure    = false;  // Cookies via HTTPS/SSL
 config.session.cookie.maxAge    = process.env.SESSION_MAX_AGE || week;
 
+config.cluster                  = {};
+config.cluster.isMaster         = false;
+
 config.bind                     = {};
 config.bind.port                = 3005;
 

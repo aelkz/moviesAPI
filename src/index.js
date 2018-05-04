@@ -204,20 +204,25 @@ app.use(function (req, res, next) {
 });
 
 const initApp = async (config) => {
-    const db = await initializeDb({ config });
-    await setupConfig();
-    app.use(middleware({ config, db }));
-    app.use('/', api({ config, db }));
-    app.use(jsonErrorHandler);
+    if (!cluster.isMaster) {
+        const db = await initializeDb({ config });
+        await setupConfig();
+        app.use(middleware({ config, db }));
+        app.use('/', api({ config, db }));
+        app.use(jsonErrorHandler);
+    }
+
     return app;
 };
 
 const bindClusteredApp = async (appToBind) => {
     if (cluster.isMaster) {
+        config.cluster.isMaster = true;
+
         // Count the machine's CPUs
         const numWorkers = require('os').cpus().length;
 
-        debug('master cluster setting up ' + numWorkers + ' workers'.bgMagenta);
+        debug('master cluster setting up ' + numWorkers + ' ' + 'workers'.bgYellow);
 
         for (let i = 0; i < numWorkers; i++) {
             cluster.fork();
@@ -229,7 +234,7 @@ const bindClusteredApp = async (appToBind) => {
 
         cluster.on('exit', function(worker, code, signal) {
             debug('worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
-            debug('starting a new worker');
+            debug('starting a new worker...');
             cluster.fork();
         });
 
@@ -241,9 +246,11 @@ const bindClusteredApp = async (appToBind) => {
 
     if (cluster.isWorker) {
         debug('   ' + `worker ${cluster.worker.id} with PID ${cluster.worker.process.pid} started`.white.bold);
+        /*
         setInterval(function(){
             debug(`   processing job from worker ${cluster.worker.id}`);
         }, 3000);
+        */
     }
 };
 

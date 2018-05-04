@@ -11,6 +11,17 @@ const urlValidator = (v, cb) => {
     }, 5);
 };
 
+const urlValidatorWrapper = {
+    type: String,
+    validate: {
+        isAsync: true,
+        validator: urlValidator,
+        // Default error message, overridden by 2nd argument to `cb()` above
+        message: 'not a valid URL'
+    },
+    required: [true, "cant't be blank"]
+};
+
 // http://mongoosejs.com/docs/2.7.x/docs/validation.html
 // http://mongoosejs.com/docs/validation.html
 // https://www.regextester.com/93652
@@ -21,43 +32,16 @@ var schema = new mongoose.Schema({
     description: { type: String, required: [true, "can't be blank"] },
     genreList: [{ type: String, required: [true, "can't be blank"] }],
     runtime: { type: String, required: [true, "can't be blank"] },
-    imdb: {
-        type: String,
-        validate: {
-            isAsync: true,
-            validator: urlValidator,
-            // Default error message, overridden by 2nd argument to `cb()` above
-            message: 'not a valid URL'
-        },
-        required: [true, "cant't be blank"]
-    },
+    imdb: urlValidatorWrapper,
     rating: { type: Number, min: 0, max: 10 },
     metascoreRating: { type: Number, min: 0, max: 100 },
     directorsList: [{
         name: { type: String, default: '', required: [true, "can't be blank"] },
-        imdb: {
-            type: String,
-            validate: {
-                isAsync: true,
-                validator: urlValidator,
-                // Default error message, overridden by 2nd argument to `cb()` above
-                message: 'not a valid URL'
-            },
-            required: [true, "cant't be blank"]
-        }
+        imdb: urlValidatorWrapper
     }],
     castList: [{
         name: { type: String, default: '', required: [true, "can't be blank"] },
-        imdb: {
-            type: String,
-            validate: {
-                isAsync: true,
-                validator: urlValidator,
-                // Default error message, overridden by 2nd argument to `cb()` above
-                message: 'not a valid URL'
-            },
-            required: [true, "cant't be blank"]
-        }
+        imdb: urlValidatorWrapper
     }],
     storyLine: String,
     aspectRatio: String,

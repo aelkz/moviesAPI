@@ -16,6 +16,7 @@ https://github.com/FredKSchott/the-node-way
 https://dzone.com/articles/design-patterns-in-expressjs
 https://expressjs.com/en/guide/writing-middleware.html
 https://github.com/developit/resource-router-middleware
+http://thecodebarbarian.com/unhandled-promise-rejections-in-node.js.html
 # sekeleton based on
 https://github.com/dominiek/node-api-skeleton
 https://github.com/luizdesign/nodejs-api-skeleton

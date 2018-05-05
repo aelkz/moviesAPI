@@ -183,7 +183,7 @@ const initApp = async (config) => {
     if (!cluster.isMaster) {
         const db = await initializeDb({ config });
         await setupConfig();
-        //app.use(middleware({ config, db }));
+        app.use(middleware({ config, db }));
         app.use('/', api({ config, db }));
     }
 

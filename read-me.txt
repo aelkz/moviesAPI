@@ -31,3 +31,5 @@ https://blog.jscrambler.com/setting-up-5-useful-middlewares-for-an-express-api/
 https://medium.com/@andy.neale/securing-node-web-applications-5d5f9bc21926
 http://scottksmith.com/blog/2014/09/21/protect-your-node-apps-noggin-with-helmet/
 https://github.com/helmetjs/helmet
+https://mathieu.fenniak.net/is-your-web-api-susceptible-to-a-csrf-exploit/
+https://stackoverflow.com/questions/10741339/do-csrf-attacks-apply-to-apis

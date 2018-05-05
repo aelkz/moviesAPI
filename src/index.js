@@ -9,14 +9,13 @@ import config from '../config/config';
 import expressValidator from 'express-validator';
 import methodOverride from 'method-override';
 import compression from 'compression';
-import csrf from 'csurf';
-import errorHandler from 'errorhandler';
+import errorHandler from './middleware/error-handler';
 import helmet from 'helmet';
 import enforce from 'express-sslify';
-import cors from 'cors';
+import cors from 'cors';                                        // https://github.com/expressjs/cors
 import morgan from 'morgan';
 
-let debug               = require('debug')('app');       // https://github.com/visionmedia/debug
+let debug               = require('debug')('app');              // https://github.com/visionmedia/debug
 let babelCore           = require('babel-core/register');
 let babelPolyfill       = require('babel-polyfill');
 let colors              = require('colors');
@@ -38,30 +37,19 @@ app.locals.author       = config.author;
 app.locals.keywords     = config.keywords;
 app.locals.ga           = config.ga;
 
-// 3rd party middleware
-// https://github.com/expressjs/cors
-app.use(cors({
-    exposedHeaders: config.corsHeaders,
-}));
-
-// Body parsing middleware supporting
-// JSON, urlencoded, and multipart requests.
-// parse application/x-www-form-urlencoded
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(bodyParser.json({
     limit: config.bodyLimit,
 }));
 
-// Easy form validation!
 // This line must be immediately after bodyParser!
 app.use(expressValidator());
 
-// If you want to simulate DELETE and PUT
-// in your app you need methodOverride.
+// If you want to simulate DELETE and PUT in your app you need methodOverride.
 app.use(methodOverride());
 
-// Compress response data with gzip / deflate.
+// compress response data with gzip / deflate.
 // This middleware should be placed "high" within
 // the stack to ensure all responses are compressed.
 function shouldCompress(req, res) {
@@ -93,13 +81,12 @@ app.set('etag', true);  // other values 'weak', 'strong'
  * XSS Protection via the X-XSS-Protection header
  * src: https://github.com/helmetjs/helmet
  */
-app.disable('x-powered-by');          // Don't advertise our server type
-app.use(csrf());                      // Prevent Cross-Site Request Forgery
-app.use(helmet());
-app.use(helmet.ieNoOpen());           // X-Download-Options for IE8+
-app.use(helmet.noSniff());            // Sets X-Content-Type-Options to nosniff
-app.use(helmet.xssFilter());          // sets the X-XSS-Protection header
-app.use(helmet.frameguard('deny'));   // Prevent iframe clickjacking
+//app.disable('x-powered-by');          // Don't advertise our server type
+//app.use(helmet());
+//app.use(helmet.ieNoOpen());           // X-Download-Options for IE8+
+//app.use(helmet.noSniff());            // Sets X-Content-Type-Options to nosniff
+//app.use(helmet.xssFilter());          // sets the X-XSS-Protection header
+//app.use(helmet.frameguard('deny'));   // Prevent iframe clickjacking
 
 let isProduction = app.get('env') === 'production';
 
@@ -154,17 +141,17 @@ if (!isProduction) {
     }
 
     // logger
-    app.use(morgan('dev'));
-    app.use(errorHandler);
+    //app.use(morgan('dev'));
+    //app.use(errorHandler);
     // Jade options: Don't minify html, debug intrumentation
-    app.locals.pretty = true;
-    app.locals.compileDebug = true;
+    //app.locals.pretty = true;
+    //app.locals.compileDebug = true;
     // Turn on console logging in development
-    app.use(morgan('dev'));
+    //app.use(morgan('dev'));
     // Turn off caching in development
     // This sets the Cache-Control HTTP header to no-store, no-cache,
     // which tells browsers not to cache anything.
-    app.use(helmet.noCache());
+    //app.use(helmet.noCache());
 }
 
 // development error handler will print stacktrace
@@ -185,31 +172,19 @@ if (!isProduction) {
     app.use(errorHandler);
 }
 
-const jsonErrorHandler = (err, req, res, next) => {
-    // console.error(err.stack)
-    if (!err) return next();
-    return res.json({
-        error: {
-            message: err.message,
-        },
-    });
-};
-
-// keep user, csrf token and config available
-app.use(function (req, res, next) {
-    res.locals.user = req.user; // will exists if using some IDP
-    res.locals.config = config;
-    res.locals._csrf = req.csrfToken();
-    next();
+app.on('error', (err) => {
+    // dont output stacktraces of errors that is throw with status as they are known
+    if (!err.status || err.status === 500) {
+        console.error(err.stack);
+    }
 });
 
 const initApp = async (config) => {
     if (!cluster.isMaster) {
         const db = await initializeDb({ config });
         await setupConfig();
-        app.use(middleware({ config, db }));
+        //app.use(middleware({ config, db }));
         app.use('/', api({ config, db }));
-        app.use(jsonErrorHandler);
     }
 
     return app;
@@ -239,8 +214,9 @@ const bindClusteredApp = async (appToBind) => {
         });
 
     } else {
+        // appToBind.server.listen(config.bind.port, config.bind.host, () => {
         appToBind.server.listen(config.bind.port, config.bind.host, () => {
-            debug(`started on port ${appToBind.server.address().port}`);
+            debug(`started on ` + `${appToBind.server.address().host}` + ':' + `${appToBind.server.address().port}`);
         });
     }
 
@@ -254,9 +230,8 @@ const bindClusteredApp = async (appToBind) => {
     }
 };
 
-export {
+module.exports = {
     app,
     initApp,
-    bindClusteredApp,
-    jsonErrorHandler,
+    bindClusteredApp
 };

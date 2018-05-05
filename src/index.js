@@ -10,7 +10,7 @@ import expressValidator from 'express-validator';
 import methodOverride from 'method-override';
 import compression from 'compression';
 import errorHandler from './middleware/error-handler';
-import helmet from 'helmet';
+import helmet from 'helmet';                                    // https://github.com/helmetjs/helmet
 import enforce from 'express-sslify';
 import cors from 'cors';                                        // https://github.com/expressjs/cors
 import morgan from 'morgan';
@@ -81,12 +81,12 @@ app.set('etag', true);  // other values 'weak', 'strong'
  * XSS Protection via the X-XSS-Protection header
  * src: https://github.com/helmetjs/helmet
  */
-//app.disable('x-powered-by');          // Don't advertise our server type
-//app.use(helmet());
-//app.use(helmet.ieNoOpen());           // X-Download-Options for IE8+
-//app.use(helmet.noSniff());            // Sets X-Content-Type-Options to nosniff
-//app.use(helmet.xssFilter());          // sets the X-XSS-Protection header
-//app.use(helmet.frameguard('deny'));   // Prevent iframe clickjacking
+app.disable('x-powered-by');          // Don't advertise our server type
+app.use(helmet());
+app.use(helmet.ieNoOpen());           // X-Download-Options for IE8+
+app.use(helmet.noSniff());            // Sets X-Content-Type-Options to nosniff
+app.use(helmet.xssFilter());          // sets the X-XSS-Protection header
+app.use(helmet.frameguard('deny'));   // Prevent iframe clickjacking
 
 let isProduction = app.get('env') === 'production';
 
@@ -111,6 +111,7 @@ if (isProduction) {
     // NOTE: Use `enforce.HTTPS(true)` if you are behind a proxy or load
     // balancer that terminates SSL for you (e.g. Heroku, Nodejitsu).
     app.use(enforce.HTTPS(true));
+
     // This tells browsers, "hey, only use HTTPS for the next period of time".
     // This will set the Strict Transport Security header, telling browsers to
     // visit by HTTPS for the next ninety days:
@@ -141,17 +142,16 @@ if (!isProduction) {
     }
 
     // logger
-    //app.use(morgan('dev'));
-    //app.use(errorHandler);
+    app.use(morgan('dev'));
     // Jade options: Don't minify html, debug intrumentation
-    //app.locals.pretty = true;
-    //app.locals.compileDebug = true;
+    app.locals.pretty = true;
+    app.locals.compileDebug = true;
     // Turn on console logging in development
-    //app.use(morgan('dev'));
+    app.use(morgan('dev'));
     // Turn off caching in development
     // This sets the Cache-Control HTTP header to no-store, no-cache,
     // which tells browsers not to cache anything.
-    //app.use(helmet.noCache());
+    app.use(helmet.noCache());
 }
 
 // development error handler will print stacktrace

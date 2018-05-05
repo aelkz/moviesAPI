@@ -16,7 +16,7 @@ import initializeDb from './db';
 import middleware from './middleware';
 import setupConfig from './lib/setupConfig';
 
-const cluster           = require('cluster');                   // http://learnboost.github.com/cluster
+const cluster           = require('cluster');                   // https://github.com/LearnBoost/cluster
 let debug               = require('debug')('app');              // https://github.com/visionmedia/debug
 let babelCore           = require('babel-core/register');       // https://babeljs.io/docs/usage/babel-register/
 let babelPolyfill       = require('babel-polyfill');            // https://babeljs.io/docs/usage/polyfill/
@@ -216,7 +216,7 @@ const bindClusteredApp = async (appToBind) => {
     } else {
         // appToBind.server.listen(config.bind.port, config.bind.host, () => {
         appToBind.server.listen(config.bind.port, config.bind.host, () => {
-            debug(`started on ` + `${appToBind.server.address().host}` + ':' + `${appToBind.server.address().port}`);
+            debug(`started on ` + `${config.bind.host}` + ':' + `${appToBind.server.address().port}`);
         });
     }
 

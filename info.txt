@@ -24,6 +24,7 @@ https://github.com/dstroot/skeleton
 https://github.com/dstroot/skeleton/blob/master/app.js
 https://github.com/gothinkster/realworld
 https://github.com/sahat/hackathon-starter
+https://github.com/dominiek/node-api-skeleton/tree/19f2971fcb9ccef431d9409692a6d78da650d57a
 # gulp example
 https://github.com/dstroot/skeleton/blob/master/gulpfile.js
 # security

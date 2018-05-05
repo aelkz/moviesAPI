@@ -1,31 +1,31 @@
 import http from 'http';
-import express from 'express';
-import bodyParser from 'body-parser';
+import express from 'express';                                  // https://expressjs.com/
+import bodyParser from 'body-parser';                           // https://github.com/expressjs/body-parser
+import expressValidator from 'express-validator';               // https://github.com/express-validator/express-validator
+import methodOverride from 'method-override';                   // https://github.com/expressjs/method-override
+import compression from 'compression';                          // https://github.com/expressjs/compression
+import helmet from 'helmet';                                    // https://github.com/helmetjs/helmet
+import enforce from 'express-sslify';                           // https://github.com/florianheinemann/express-sslify
+import cors from 'cors';                                        // https://github.com/expressjs/cors
+import morgan from 'morgan';                                    // https://github.com/expressjs/morgan
+
+import api from './api';
+import config from '../config/config';
+import errorHandler from './middleware/error-handler';
 import initializeDb from './db';
 import middleware from './middleware';
-import api from './api';
 import setupConfig from './lib/setupConfig';
-import config from '../config/config';
-import expressValidator from 'express-validator';
-import methodOverride from 'method-override';
-import compression from 'compression';
-import errorHandler from './middleware/error-handler';
-import helmet from 'helmet';                                    // https://github.com/helmetjs/helmet
-import enforce from 'express-sslify';
-import cors from 'cors';                                        // https://github.com/expressjs/cors
-import morgan from 'morgan';
 
+const cluster           = require('cluster');                   // http://learnboost.github.com/cluster
 let debug               = require('debug')('app');              // https://github.com/visionmedia/debug
-let babelCore           = require('babel-core/register');
-let babelPolyfill       = require('babel-polyfill');
-let colors              = require('colors');
+let babelCore           = require('babel-core/register');       // https://babeljs.io/docs/usage/babel-register/
+let babelPolyfill       = require('babel-polyfill');            // https://babeljs.io/docs/usage/polyfill/
+let colors              = require('colors');                    // https://github.com/Marak/colors.js
 
 let minute = 1000 * 60;   //     60000
 let hour = (minute * 60); //   3600000
 let day  = (hour * 24);   //  86400000
 let week = (day * 7);     // 604800000
-
-const cluster = require('cluster');
 
 const app = express();
 app.server = http.createServer(app);

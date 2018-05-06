@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';                    // https://npmjs.org/package/mongoose
 
-let debug  = require('debug')('app');          // https://github.com/visionmedia/debug
+let debug  = require('debug')('app');
 let colors = require('colors');
 
 export default ({ config }) => new Promise((resolve) => {
@@ -15,12 +15,9 @@ export default ({ config }) => new Promise((resolve) => {
         debug('mongodb ' + 'connected!'.green.bold);
         console.log(`connected with mongodb instance at ${config.mongo.uri}`);
 
-        // Log how we are running
-        //debug('listening on port ' + app.get('port').toString().green.bold);
-        //debug('listening in ' + app.settings.env.green.bold + ' mode.');
         debug('ctrl+c'.green.bold + ' to shut down.');
 
-        // Exit cleanly on Ctrl+C
+        // exit cleanly on Ctrl+C
         process.on('SIGINT', function () {
             console.log('\n');
             debug('has ' + 'shutdown'.green.bold);

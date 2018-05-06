@@ -1,6 +1,5 @@
 import { Router } from 'express';
-import asyncWrap from 'express-async-wrapper';
-import Movie from './../models/movie';
+import MovieModel from './../models/movie';
 
 export default () => {
     // express.Router
@@ -26,17 +25,47 @@ export default () => {
      **/
 
     /************************************************************************
-     * RESOURCE 01 - /livros                                                *
+     * RESOURCE 01 - /movies                                                *
      * URI para busca (GET) e cadastro (POST) de livros                     *
-     * @author: deise.ca@gmail.com                                          *
      * *********************************************************************/
-    api.route('/livros')
-        .get(function(req,res) {
+    api.route('/movies')
+    .get(function(req,res) {
+        MovieModel.find(function(err,movies) {
+            if(err) {
+                debug(err.red.bold);
+                res.status(500).send(err);
+            }else {
+                res.json(movies);
+            }
+        });
+    })
+    .post(function(req,res) {
+            /*
+            "title": "",
+            "parentalGuidance": "",
+            "description": "",
+            "genreList": [],
+            "runtime": "",
+            "imdb": "",
+            "rating": "",
+            "metascoreRating": "",
+            "directorsList": [],
+            "castList": [],
+            "storyLine": "",
+            "aspectRatio": "",
+            "releaseDate": "",
+            "country": "",
+            "language": ""
+            */
 
             //validation
-            req.assert('name','Name is required').notEmpty();
-            req.assert('email','A valid email is required').isEmail();
-            req.assert('password','Enter a password 6 - 20').len(6,20);
+            req.assert('title','title is required').notEmpty();
+            req.assert('parentalGuidance','parentalGuidance is required').notEmpty();
+            req.assert('description','description is required').notEmpty();
+            req.assert('genreList','genreList is required').notEmpty();
+            req.assert('runtime','runtime is required').notEmpty();
+            req.assert('directorsList','directorsList is required').notEmpty();
+            req.assert('castList','castList is required').notEmpty();
 
             var errors = req.validationErrors();
 
@@ -45,20 +74,9 @@ export default () => {
                 return;
             }
 
-            // recupera todos (verbo:GET)
-            Movie.find(function(err,livros) {
-                if(err) {
-                    res.status(500).send(err);
-                }else {
-                    res.json(livros);
-                }
-            });
-        })
-        .post(function(req,res) {
-            // salvar um livro (verbo:POST)
-            var livro = new Movie(req.body);
-            livro.save(livro);
-            res.status(201).send(livro);
+            var movie = new MovieModel(req.body);
+            movie.save(movie);
+            res.status(201).send(movie);
         });
 
     /*------------------------------------------------------
@@ -75,48 +93,44 @@ export default () => {
     //});
 
     /************************************************************************
-     * RESOURCE 02 INTERNO - /livros/:livroId                               *
-     * URI para busca de um livro pelo ID (findById) para ser utilizado     *
-     * como premissa para a operação PUT e PATCH. Seu uso é interno dentro  *
-     * da API e não é exposto para o público externo!                       *
-     * @author: deise.ca@gmail.com                                          *
+     * RESOURCE 02 INTERNO - /movies/:movieId                               *
+     * URI used for search of an movie by ID (findById) for being used as   *
+     * premise to PUT and PATCH operations. It's used for pre-load the      *
+     * movie object from database.                                          *
      * *********************************************************************/
-    api.use('/livros/:livroId', function(req,res,next) {
-        Movie.findById(req.params.livroId, function(err,livro) {
+    api.use('/movies/:movieId', function(req,res,next) {
+        MovieModel.findById(req.params.movieId, function(err,movie) {
             if(err) {
-                // se houve um erro genérico lança o erro 500
                 res.status(500).send(err);
-            }else if(livro) {
-                // se localizou o livro pelo ID, injeta os dados recuperados do livro dentro da req
-                req.livro = livro;
-                next(); // comando para dar prosseguimento (por ser de uso interno)
+            }else if(movie) {
+                req.movie = movie;
+                next(); // forward the runtime execution
             }else {
-                // se não localizou, retorna uma mensagem de erro 404
-                res.status(404).send('Nenhum livro localizado!');
+                res
+                .status(404)
+                .json({
+                    status: false,
+                    message: 'movie not found!',
+                });
             }
         });
     });
 
     /************************************************************************
-     * RESOURCE 02 - /livros/:livroId                                       *
-     * URI para busca c/ alteração (PUT) e remoção (PATCH) de livros        *
-     * @author: deise.ca@gmail.com                                          *
+     * RESOURCE 02 - /movies/:movieId                                       *
+     * URI used for search w/ update (PUT)
      * *********************************************************************/
-    api.route('/livros/:livroId')
+    api.route('/movies/:movieId')
         .get(function(req,res) {
-            // busca um livro pelo ID apenas
-            res.json(req.livro);
+            res.json(req.movie);
         })
         .put(function(req,res) {
             // alterar um livro (verbo: PUT)
             req.livro.titulo = req.body.titulo;
             req.livro.autor = req.body.autor;
             req.livro.descricao = req.body.descricao;
-            req.livro.genero = req.body.genero;
-            req.livro.paginas = req.body.paginas;
-            req.livro.anoEdicao = req.body.anoEdicao;
-            req.livro.isbn = req.body.isbn;
-            req.livro.save();
+            //req.livro.save();
+            MovieModel.save(req.livro);
             res.json(req.livro);
         });
 

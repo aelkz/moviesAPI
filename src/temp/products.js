@@ -8,7 +8,6 @@ var Product = require('../models/product');
 
 // interpret GET /products - show product listing */
 router.get('/products', function (req, res, next) {
-
     // retrieve all products using the product model; returns either an error or list of products
     Product.find(function (err, products) {
         // if we have an error

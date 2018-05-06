@@ -1,5 +1,9 @@
 var mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
+// var m2s = require('mongoose-to-swagger');
+
+// see: https://github.com/simonguest/swagger-mongoose
+// see: https://github.com/giddyinc/mongoose-to-swagger
 
 const urlValidator = (v, cb) => {
     setTimeout(function() {
@@ -31,7 +35,7 @@ var schema = new mongoose.Schema({
     parentalGuidance: { type: String, uppercase: true, required: [true, "can't be blank"] },
     description: { type: String, required: [true, "can't be blank"] },
     genreList: [{ type: String, required: [true, "can't be blank"] }],
-    runtime: { type: String, required: [true, "can't be blank"] },
+    runtime: { type: String, required: [true, "can't be blank"], maxlength: 3 },
     imdb: urlValidatorWrapper,
     rating: { type: Number, min: 0, max: 10 },
     metascoreRating: { type: Number, min: 0, max: 100 },
@@ -41,6 +45,7 @@ var schema = new mongoose.Schema({
     }],
     castList: [{
         name: { type: String, default: '', required: [true, "can't be blank"] },
+        role: { type: String, default: '', required: [true, "can't be blank"] },
         imdb: urlValidatorWrapper
     }],
     storyLine: String,
@@ -50,10 +55,9 @@ var schema = new mongoose.Schema({
     language: String
 }, {timestamps: true});
 
-// old
-// castList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Cast' }]
-// directorsList: [{ type: String }]
-
 schema.plugin(uniqueValidator, {message: 'is already registered.'});
 
-export default mongoose.models.movie || mongoose.model('movie', schema);
+// const swaggerSchema = m2s(mongoose.model('movie', schema));
+// console.log(swaggerSchema);
+
+export default mongoose.models.movies || mongoose.model('movies', schema);

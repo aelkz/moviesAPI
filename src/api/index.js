@@ -5,9 +5,9 @@ import healthcheck from "./healthcheck";
 export default ({ config, db }) => {
     const api = Router();
 
-    api.use('/movies', movies({ config, db }));
+    api.use(movies({ config, db }));
 
-    api.use('/healthcheck', healthcheck({ config, db }));
+    api.use(healthcheck({ config, db }));
 
     api.get('/', (req, res) => {
         const description = config.description;

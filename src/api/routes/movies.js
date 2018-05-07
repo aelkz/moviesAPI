@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import MovieModel from './../models/movie';
+import MovieModel from '../models/movie';
 
 export default () => {
     // express.Router
@@ -8,7 +8,7 @@ export default () => {
     /**
      Provide Api for Model
 
-     Model list  GET /api/v1/models
+     Model list  GET /api/v1/api.models
 
      @header
         Authorization: Bearer {token}
@@ -16,7 +16,7 @@ export default () => {
         param1 {String} - description
         param2 {String} - description
 
-     Model create  POST /api/v1/models
+     Model create  POST /api/v1/api.models
      @header
         Authorization: Bearer {token}
      @params
@@ -125,7 +125,7 @@ export default () => {
             res.json(req.movie);
         })
         .put(function(req,res) {
-            // alterar um livro (verbo: PUT)
+
             req.livro.titulo = req.body.titulo;
             req.livro.autor = req.body.autor;
             req.livro.descricao = req.body.descricao;

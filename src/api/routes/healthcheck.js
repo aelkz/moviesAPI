@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-const healthcheck = require('./controller/healthcheck.controller');
+const healthcheck = require('../controller/healthcheck.controller');
 
 export default () => {
     // express.Router

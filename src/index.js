@@ -11,9 +11,9 @@ import morgan from 'morgan';                                    // https://githu
 
 import api from './api';
 import config from '../config/config';
-import errorHandler from './middleware/error-handler';
+import errorHandler from './api/middleware/error-handler';
 import initializeDb from './db';
-import middleware from './middleware';
+import middleware from './api/middleware/index';
 import setupConfig from './lib/setupConfig';
 
 const cluster           = require('cluster');                   // https://github.com/LearnBoost/cluster

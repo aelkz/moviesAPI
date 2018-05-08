@@ -1,4 +1,4 @@
-import { initApp, bindClusteredApp } from '.';
+import { initApp, bindClusteredApp } from './index';
 
 var config  = require('../config/config');
 

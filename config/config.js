@@ -78,4 +78,6 @@ config.admin.username           = 'admin';
 config.admin.email              = 'raphael.alex@gmail.com';
 config.admin.password           = 'admin12345';
 
+config.environment              = 'development';
+
 module.exports = config;

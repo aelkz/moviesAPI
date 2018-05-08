@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import movies from './routes/movies';
-import healthcheck from "./routes/healthcheck";
+import movies from './routes/movies.route';
+import healthcheck from "./routes/healthcheck.route";
 
 export default ({ config, db }) => {
     const api = Router();

@@ -17,17 +17,19 @@ import middleware from './api/middleware/index';
 import setupConfig from './lib/setupConfig';
 
 const cluster           = require('cluster');                   // https://github.com/LearnBoost/cluster
+// should evaluate node-inspector.                              // https://github.com/node-inspector/node-inspector
 let debug               = require('debug')('app');              // https://github.com/visionmedia/debug
-let babelCore           = require('babel-core/register');       // https://babeljs.io/docs/usage/babel-register/
-let babelPolyfill       = require('babel-polyfill');            // https://babeljs.io/docs/usage/polyfill/
-let colors              = require('colors');                    // https://github.com/Marak/colors.js
+//let babelCore           = require('babel-core/register');       // https://babeljs.io/docs/usage/babel-register/
+//let babelPolyfill       = require('babel-polyfill');            // https://babeljs.io/docs/usage/polyfill/
+//let colors              = require('colors');                    // https://github.com/Marak/colors.js
 
-let minute = 1000 * 60;   //     60000
-let hour = (minute * 60); //   3600000
-let day  = (hour * 24);   //  86400000
-let week = (day * 7);     // 604800000
+//let minute = 1000 * 60;   //     60000
+//let hour = (minute * 60); //   3600000
+//let day  = (hour * 24);   //  86400000
+//let week = (day * 7);     // 604800000
 
 const app = express();
+
 app.server = http.createServer(app);
 
 app.locals.application  = config.name;
@@ -88,7 +90,7 @@ app.use(helmet.noSniff());            // Sets X-Content-Type-Options to nosniff
 app.use(helmet.xssFilter());          // sets the X-XSS-Protection header
 app.use(helmet.frameguard('deny'));   // Prevent iframe clickjacking
 
-let isProduction = app.get('env') === 'production';
+let isProduction = config.environment === 'production';
 
 if (isProduction) {
     app.locals.pretty = false;
@@ -126,7 +128,7 @@ if (isProduction) {
 
 if (isProduction) {
     // production error handler no stacktraces leaked to user
-    app.use(function(err, req, res, next) {
+    app.use(function(err, req, res) {
         res.status(err.status || 500);
         debug('Error: ' + (err.status || 500).toString().red.bold + ' ' + err);
         res.json({'errors': {
@@ -156,7 +158,7 @@ if (!isProduction) {
 
 // development error handler will print stacktrace
 if (!isProduction) {
-    app.use(function(err, req, res, next) {
+    app.use(function(err, req, res) {
         debug(err.stack.red);
         debug('Error: ' + (err.status || 500).toString().red.bold + ' ' + err);
 

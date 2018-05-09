@@ -128,8 +128,6 @@ if (isProduction) {
     // production error handler no stacktraces leaked to user
     app.use(function(err, req, res) {
 
-        console.log('cccc1');
-
         //debug('Error: ' + (err.status || 500).toString().red.bold + ' ' + err);
 
         res.json({'errors': {

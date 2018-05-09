@@ -8,10 +8,8 @@ import helmet from 'helmet';                                    // https://githu
 import enforce from 'express-sslify';                           // https://github.com/florianheinemann/express-sslify
 import cors from 'cors';                                        // https://github.com/expressjs/cors
 import morgan from 'morgan';                                    // https://github.com/expressjs/morgan
-
 import api from './api';
 import config from '../config/config';
-import errorHandler from './api/middleware/error-handler';
 import initializeDb from './db';
 import middleware from './api/middleware/index';
 import setupConfig from './lib/setupConfig';
@@ -19,14 +17,14 @@ import setupConfig from './lib/setupConfig';
 const cluster           = require('cluster');                   // https://github.com/LearnBoost/cluster
 // should evaluate node-inspector.                              // https://github.com/node-inspector/node-inspector
 let debug               = require('debug')('app');              // https://github.com/visionmedia/debug
-//let babelCore           = require('babel-core/register');       // https://babeljs.io/docs/usage/babel-register/
-//let babelPolyfill       = require('babel-polyfill');            // https://babeljs.io/docs/usage/polyfill/
-//let colors              = require('colors');                    // https://github.com/Marak/colors.js
+let babelCore           = require('babel-core/register');       // https://babeljs.io/docs/usage/babel-register/
+let babelPolyfill       = require('babel-polyfill');            // https://babeljs.io/docs/usage/polyfill/
+let colors              = require('colors');                    // https://github.com/Marak/colors.js
 
-//let minute = 1000 * 60;   //     60000
-//let hour = (minute * 60); //   3600000
-//let day  = (hour * 24);   //  86400000
-//let week = (day * 7);     // 604800000
+let minute = 1000 * 60;   //     60000
+let hour = (minute * 60); //   3600000
+let day  = (hour * 24);   //  86400000
+let week = (day * 7);     // 604800000
 
 const app = express();
 
@@ -129,8 +127,11 @@ if (isProduction) {
 if (isProduction) {
     // production error handler no stacktraces leaked to user
     app.use(function(err, req, res) {
-        res.status(err.status || 500);
-        debug('Error: ' + (err.status || 500).toString().red.bold + ' ' + err);
+
+        console.log('cccc1');
+
+        //debug('Error: ' + (err.status || 500).toString().red.bold + ' ' + err);
+
         res.json({'errors': {
             message: err.message,
             error: {}  // don't leak information
@@ -155,31 +156,6 @@ if (!isProduction) {
     // which tells browsers not to cache anything.
     app.use(helmet.noCache());
 }
-
-// development error handler will print stacktrace
-if (!isProduction) {
-    app.use(function(err, req, res) {
-        debug(err.stack.red);
-        debug('Error: ' + (err.status || 500).toString().red.bold + ' ' + err);
-
-        res.status(err.status || 500);
-
-        res.json({'errors': {
-            message: err.message,
-            error: err
-        }});
-    });
-
-    // Final error catch-all just in case...
-    app.use(errorHandler);
-}
-
-app.on('error', (err) => {
-    // dont output stacktraces of errors that is throw with status as they are known
-    if (!err.status || err.status === 500) {
-        console.error(err.stack);
-    }
-});
 
 const initApp = async (config) => {
     if (!cluster.isMaster) {

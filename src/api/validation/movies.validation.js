@@ -1,4 +1,4 @@
-import Joi from 'joi';
+const Joi = require('joi');
 
 export default {
     // POST /movies
@@ -12,11 +12,12 @@ export default {
                 'Family','Fantasy','Film Noir','History','Horror','Music','Musical','Mystery','Romance',
                 'Sci-Fi','Short','Sport','Superhero','Thriller','War','Western'
             ]).required(),
-            runtime: Joi.string().regex(/^[1-9]{3}$/).required(),
-            directorsList: Joi.array().required(),
-            castList: Joi.array().required()
+            runtime: Joi.string().regex(/^[1-9]{3}$/).required()
         }
-    },
+    }
+};
+
+/*
     // **************************************************
     // https://github.com/hapijs/joi/issues/1124
     // email: joi.string().email().required(),
@@ -40,4 +41,5 @@ export default {
             postId: Joi.string().hex().required()
         }
     }
-};
+
+ */

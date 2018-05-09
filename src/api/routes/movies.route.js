@@ -1,10 +1,7 @@
 import { Router } from 'express';
-import validate from 'express-validator';
 import movieCtrl from '../controller/movies.controller';
 import validationRules from '../validation/movies.validation';
-
-// import validate from 'express-validation';
-// import paramValidation from '../config/param-validation';
+import validate from 'express-validation';
 
 /*
     GET — retrieve a particular resource’s object or list all objects

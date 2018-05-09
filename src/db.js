@@ -25,7 +25,7 @@ export default ({ config }) => new Promise((resolve) => {
             process.exit(0);
         });
     }).once('error', () => {
-        debug('mongodb connection error. please make sure mongodb is running.'.red.bold);
+        //debug('mongodb connection error. please make sure mongodb is running.'.red.bold);
         process.exit(0);
     });
 });

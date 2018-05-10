@@ -31,13 +31,6 @@ function get (req,res) {
 }
 
 function create(req,res) {
-    var errors = req.validationErrors();
-
-    if(errors){
-        res.status(422).json(errors);
-        return;
-    }
-
     var movie = new MovieModel(req.body);
     movie.save(movie);
     res.status(201).send(movie);

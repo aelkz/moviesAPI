@@ -20,6 +20,7 @@ let debug               = require('debug')('app');              // https://githu
 let babelCore           = require('babel-core/register');       // https://babeljs.io/docs/usage/babel-register/
 let babelPolyfill       = require('babel-polyfill');            // https://babeljs.io/docs/usage/polyfill/
 let colors              = require('colors');                    // https://github.com/Marak/colors.js
+let validate                  = require('express-validation');
 
 let minute = 1000 * 60;   //     60000
 let hour = (minute * 60); //   3600000
@@ -154,6 +155,34 @@ if (!isProduction) {
     // which tells browsers not to cache anything.
     app.use(helmet.noCache());
 }
+
+// error handler
+app.use(function (err, req, res, next) {
+    // specific for validation errors
+    console.log('a-1 '+err.message);
+    console.log('a-2 '+err.statusCode);
+
+    if (err instanceof validate.ValidationError) {
+        console.log('a-4 ');
+
+        return res.status(err.status).json(err);
+    }
+
+    console.log('a-5 ');
+
+    // other type of errors, it *might* also be a Runtime Error
+    // example handling
+    if (config.environment !== 'production') {
+        console.log('a-6 ');
+
+        return res.status(500).send(err.stack);
+    } else {
+        console.log('a-7 ');
+
+        return res.status(500);
+    }
+
+});
 
 const initApp = async (config) => {
     if (!cluster.isMaster) {

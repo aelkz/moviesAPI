@@ -26,6 +26,7 @@
   "scripts": {
     "start:dev": "nodemon -w src --exec \"DEBUG=app babel-node src/run.js\"",
     "start:prod": "node dist/run.js",
+    "start": "node dist/run.js",
     "build:dev": "babel src -s -D -d dist",
     "build:prod": "babel src -s -D -d dist",
     "docker": "docker",

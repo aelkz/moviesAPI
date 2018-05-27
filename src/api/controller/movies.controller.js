@@ -1,5 +1,9 @@
 import MovieModel from '../models/movie.model';
 
+/**
+ * Get movie
+ * @returns {Movie}
+ */
 function load(req,res) {
     MovieModel.find(function(err,movies) {
         if(err) {
@@ -30,6 +34,11 @@ function get (req,res) {
     res.json(req.movie);
 }
 
+/**
+ * Create new movie
+ * @property {string} req.body.title - The title of the movie.
+ * @returns {Movie}
+ */
 function create(req,res) {
     var movie = new MovieModel(req.body);
     movie.save(movie);

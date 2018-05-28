@@ -44,3 +44,6 @@ https://expressjs.com/
 https://github.com/koajs/koa
 # openshift
 https://github.com/sclorg/nodejs-ex
+https://stackoverflow.com/questions/33636804/how-do-i-modify-the-node-startup-command-in-open-shift
+https://babeljs.io/docs/usage/babel-register/
+https://stackoverflow.com/questions/36516600/how-can-deploy-node-js-application-in-openshift

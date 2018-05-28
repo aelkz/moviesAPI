@@ -219,8 +219,11 @@ const bindClusteredApp = async (appToBind) => {
         });
 
     } else {
+        var server_port = process.env.OPENSHIFT_NODEJS_PORT || config.bind.port;
+        var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || config.bind.host;
+
         // appToBind.server.listen(config.bind.port, config.bind.host, () => {
-        appToBind.server.listen(config.bind.port, config.bind.host, () => {
+        appToBind.server.listen(server_port, server_ip_address, () => {
             debug(`started on ` + `${config.bind.host}` + ':' + `${appToBind.server.address().port}`);
         });
     }

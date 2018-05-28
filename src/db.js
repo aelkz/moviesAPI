@@ -4,6 +4,15 @@ let debug  = require('debug')('app');
 let colors = require('colors');
 
 export default ({ config }) => new Promise((resolve) => {
+    if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
+        let connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
+        process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
+        process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+        process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
+        process.env.OPENSHIFT_APP_NAME;
+        config.mongo.uri = connection_string;
+    }
+
     console.log(`trying to acquire mongodb connection at ${config.mongo.uri}`);
 
     // connect to a database if needed, then pass it to `callback`:

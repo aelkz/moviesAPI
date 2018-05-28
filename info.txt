@@ -42,3 +42,5 @@ https://stackoverflow.com/questions/10741339/do-csrf-attacks-apply-to-apis
 https://medium.com/@l1ambda/why-you-should-use-koa-with-node-js-7c231a8174fa
 https://expressjs.com/
 https://github.com/koajs/koa
+# openshift
+https://github.com/sclorg/nodejs-ex

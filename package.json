@@ -25,8 +25,8 @@
   "private": true,
   "scripts": {
     "start:dev": "nodemon -w src --exec \"DEBUG=app babel-node src/run.js\"",
-    "start:prod": "node dist/run.js",
-    "start": "npm-run-all -p build:prod start:prod",
+    "start:prod": "nodemon -w src --exec \"DEBUG=app babel-node src/run.js\"",
+    "start": "babel-node src/run.js",
     "build:dev": "babel src -s -D -d dist",
     "build:prod": "babel src -s -D -d dist",
     "docker": "docker",
@@ -39,7 +39,7 @@
     "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
     "stop": "lsof -ti :3000 | xargs kill"
   },
-  "main": "src/run.js",
+  "main": "dist/run.js",
   "engines": {
     "node": "4.x.x"
   },

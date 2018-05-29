@@ -4,13 +4,20 @@ let debug  = require('debug')('app');
 let colors = require('colors');
 
 export default ({ config }) => new Promise((resolve) => {
-    if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
-        let connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
-        process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
-        process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
-        process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
-        process.env.OPENSHIFT_APP_NAME;
+
+    if(process.env.OPENSHIFT_MONGODB_PASSWORD){
+        console.log(`trying to acquire mongodb connection with openshift parameters`);
+
+        let mongoServiceName = process.env.OPENSHIFT_DATABASE_SERVICE_NAME.toUpperCase();
+
+        let connection_string = process.env.OPENSHIFT_MONGODB_USER + ":" +
+        process.env.OPENSHIFT_MONGODB_PASSWORD + "@" +
+        process.env[mongoServiceName + '_SERVICE_HOST'] + ':' +
+        process.env[mongoServiceName + '_SERVICE_PORT'] + '/' +
+        process.env.OPENSHIFT_MONGODB_DATABASE;
         config.mongo.uri = connection_string;
+
+        console.log(`mongo.uri=${config.mongo.uri}`);
     }
 
     console.log(`trying to acquire mongodb connection at ${config.mongo.uri}`);

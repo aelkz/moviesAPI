@@ -17,6 +17,8 @@ export default ({ config }) => new Promise((resolve) => {
         process.env.OPENSHIFT_MONGODB_DATABASE;
 
         config.mongo.uri = process.env.OPENSHIFT_DATABASE_SERVICE_NAME + '://' +
+            process.env.OPENSHIFT_MONGODB_USER + ":" +
+            process.env.OPENSHIFT_MONGODB_PASSWORD + "@" +
             process.env[mongoServiceName + '_SERVICE_HOST'] + ':' +
             process.env[mongoServiceName + '_SERVICE_PORT'] + '/' +
             process.env.OPENSHIFT_MONGODB_DATABASE;

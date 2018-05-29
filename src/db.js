@@ -15,9 +15,14 @@ export default ({ config }) => new Promise((resolve) => {
         process.env[mongoServiceName + '_SERVICE_HOST'] + ':' +
         process.env[mongoServiceName + '_SERVICE_PORT'] + '/' +
         process.env.OPENSHIFT_MONGODB_DATABASE;
-        config.mongo.uri = connection_string;
 
-        console.log(`mongo.uri=${config.mongo.uri}`);
+        config.mongo.uri = process.env.OPENSHIFT_DATABASE_SERVICE_NAME + '://' +
+            process.env[mongoServiceName + '_SERVICE_HOST'] + ':' +
+            process.env[mongoServiceName + '_SERVICE_PORT'] + '/' +
+            process.env.OPENSHIFT_MONGODB_DATABASE;
+
+        console.log(`connection_string=${connection_string}`);
+        console.log(`config.mongo.uri=${config.mongo.uri}`);
     }
 
     console.log(`trying to acquire mongodb connection at ${config.mongo.uri}`);

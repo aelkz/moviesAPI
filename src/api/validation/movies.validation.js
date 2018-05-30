@@ -11,7 +11,7 @@ export default {
                 'Action','Adventure','Animation','Biography','Comedy','Crime','Documentary','Drama',
                 'Family','Fantasy','Film Noir','History','Horror','Music','Musical','Mystery','Romance',
                 'Sci-Fi','Short','Sport','Superhero','Thriller','War','Western'
-            ]).items(Joi.string().required()),
+            ]).items(Joi.string().required()).min(1),
             runtime: Joi.string().regex(/^[1-9]{3}$/).required()
         }
     }

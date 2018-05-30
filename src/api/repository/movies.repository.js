@@ -2,14 +2,15 @@ import model from '../models/movie.model';
 
 
 const getById = async(id) => {
-    const res = await movie.findById(id);
+    const res = await model.findById(id);
     return res;
 };
 
 const get = async() => {
-    const res = await movie.find({
-        active: true
-    });
+    //const res = await model.find({
+    //    active: true
+    //});
+    const res = await model.find();
     return res;
 };
 
@@ -20,7 +21,7 @@ const create = async(body) => {
 };
 
 const update = async(id, body) => {
-    await Product
+    await model
     .findByIdAndUpdate(id, {
         $set: {
             title: body.title,
@@ -46,4 +47,4 @@ const remove = async(id) => {
     await model.findOneAndRemove(id);
 };
 
-export default { create, remove };
+export default { get, getById, create, remove, update };

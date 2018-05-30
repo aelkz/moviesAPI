@@ -22,18 +22,10 @@ export default () => {
     .post(validate(requirements.createMovie), controller.create);
 
     /************************************************************************
-     * Internal router                                                      *
-     * URI used for search of an movie by ID (findById) for being used as   *
-     * premise to PUT and PATCH operations. It's used for pre-load the      *
-     * movie object from database.                                          *
-     * *********************************************************************/
-    api.use('/movies/:movieId', controller.loadById);
-
-    /************************************************************************
      * URI used for search followed by update (PUT) or removal (DELETE)     *
      * *********************************************************************/
-    api.route('/movies/:movieId')
-        .get(controller.get)
+    api.route('/movies/:id')
+        .get(controller.getById)
         .put(controller.update)
         .delete(controller.remove);
 

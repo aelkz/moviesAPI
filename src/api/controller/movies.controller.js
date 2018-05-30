@@ -1,57 +1,84 @@
-import MovieModel from '../models/movie.model';
+'use strict';
+
+import repository from '../repository/movies.repository';
+
+const getById = async(req, res, next) => {
+    try {
+        var data = await repository.getById(req.params.movieId);
+        res.status(200).send(data);
+    } catch (e) {
+        res.status(404).send({
+            message: 'movie ' + req.params.movieId + ' not found!'
+        });
+    }
+};
 
 /**
  * Get movie
+ * @property {string} req.body.id - The id of the movie.
  * @returns {Movie}
  */
-function load(req,res) {
-    MovieModel.find(function(err,movies) {
-        if(err) {
-            res.status(500).send(err);
-        }else {
-            res.json(movies);
-        }
-    });
-}
 
-function loadById(req,res,next) {
-    MovieModel.findById(req.params.movieId, function(err,movie) {
-        if(err) {
-            res.status(500).send(err);
-        }else if(movie) {
-            req.movie = movie;
-            next(); // forward the runtime execution
-        }else {
-            res.status(404).json({
-                status: false,
-                message: 'movie not found!',
-            });
-        }
-    });
-}
-
-function get (req,res) {
-    res.json(req.movie);
-}
+const get = async(req, res, next) => {
+    try {
+        var collection = await repository.get();
+        res.status(200).send(collection);
+    } catch (e) {
+        res.status(500).send({
+            message: e.message
+        });
+    }
+};
 
 /**
  * Create new movie
  * @property {string} req.body.title - The title of the movie.
  * @returns {Movie}
  */
-function create(req,res) {
-    var movie = new MovieModel(req.body);
-    movie.save(movie);
-    res.status(201).send(movie);
-}
+const create = async(req, res, next) => {
+    try {
+        const movie = await repository.create(req.body);
+        res.status(201).send(movie);
+    }catch (e) {
+        res.status(500).send({
+            message: e.message
+        });
+    }
+};
 
-function update(req,res) {
-    req.livro.titulo = req.body.titulo;
-    req.livro.autor = req.body.autor;
-    req.livro.descricao = req.body.descricao;
-    //req.livro.save();
-    MovieModel.save(req.livro);
-    res.json(req.livro);
-}
+/**
+ * Update movie
+ * @property {string} req.body.id - The id of the movie.
+ * @returns void
+ */
+const update = async(req, res, next) => {
+    try {
+        const movie = await repository.update(req.params.movieId, req.body);
+        res.status(201).send(movie);
+    }catch (e) {
+        res.status(500).send({
+            message: e.message
+        });
+    }
+};
 
-export default { load, loadById, create, get, update };
+/**
+ * Delete movie
+ * @property {string} req.body.id - The id of the movie.
+ * @returns void
+ */
+const remove = async(req, res, next) => {
+    try {
+        await repository.remove(req.params.movieId);
+        res.status(302).send({
+            message: 'movie ' + req.params.movieId + ' removed.'
+        });
+    }catch (e) {
+        //res.setHeader('Location', 'http://' + req.headers['host'] + '/movies');
+        res.status(404).send({
+            message: 'movie ' + req.params.movieId + ' not found!'
+        });
+    }
+};
+
+export default { getById, get, create, update, remove };

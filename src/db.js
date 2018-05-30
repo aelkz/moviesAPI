@@ -10,12 +10,6 @@ export default ({ config }) => new Promise((resolve) => {
 
         let mongoServiceName = process.env.OPENSHIFT_DATABASE_SERVICE_NAME.toUpperCase();
 
-        let connection_string = process.env.OPENSHIFT_MONGODB_USER + ":" +
-        process.env.OPENSHIFT_MONGODB_PASSWORD + "@" +
-        process.env[mongoServiceName + '_SERVICE_HOST'] + ':' +
-        process.env[mongoServiceName + '_SERVICE_PORT'] + '/' +
-        process.env.OPENSHIFT_MONGODB_DATABASE;
-
         config.mongo.uri = process.env.OPENSHIFT_DATABASE_SERVICE_NAME + '://' +
             process.env.OPENSHIFT_MONGODB_USER + ":" +
             process.env.OPENSHIFT_MONGODB_PASSWORD + "@" +
@@ -23,7 +17,6 @@ export default ({ config }) => new Promise((resolve) => {
             process.env[mongoServiceName + '_SERVICE_PORT'] + '/' +
             process.env.OPENSHIFT_MONGODB_DATABASE;
 
-        console.log(`connection_string=${connection_string}`);
         console.log(`config.mongo.uri=${config.mongo.uri}`);
     }
 

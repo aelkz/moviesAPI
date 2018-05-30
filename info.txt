@@ -1,16 +1,21 @@
 https://timonweb.com/posts/how-to-enable-es6-imports-in-nodejs/
+
 # cluster
 https://www.infoq.com/br/articles/nodejs-utilizando-modulo-de-cluster
 https://www.sitepoint.com/how-to-create-a-node-js-cluster-for-speeding-up-your-apps/
 http://www.acuriousanimal.com/2017/08/12/understanding-the-nodejs-cluster-module.html
+
 # single sign-on (authorization)
 https://apiko.com/blog/express-js-api-and-rest-api-organization-tips-examples-and-techniques/
+
 # reference
 https://developers.google.com/calendar/v3/reference/
+
 # cluster
 http://www.acuriousanimal.com/2017/08/12/understanding-the-nodejs-cluster-module.html
 https://www.sitepoint.com/how-to-create-a-node-js-cluster-for-speeding-up-your-apps/
 https://www.infoq.com/br/articles/nodejs-utilizando-modulo-de-cluster
+
 # design patterns
 https://blog.risingstack.com/fundamental-node-js-design-patterns/
 https://github.com/FredKSchott/the-node-way
@@ -20,6 +25,7 @@ https://github.com/developit/resource-router-middleware
 http://thecodebarbarian.com/unhandled-promise-rejections-in-node.js.html
 https://medium.com/@jeffandersen/building-a-node-js-rest-api-with-express-46b0901f29b6
 https://webapplog.com/seven-things-you-should-stop-doing-with-node-js/
+
 # sekeleton based on
 https://github.com/dominiek/node-api-skeleton
 https://github.com/luizdesign/nodejs-api-skeleton
@@ -29,8 +35,11 @@ https://github.com/gothinkster/realworld
 https://github.com/sahat/hackathon-starter
 https://github.com/dominiek/node-api-skeleton/tree/19f2971fcb9ccef431d9409692a6d78da650d57a
 https://github.com/linnovate/mean
+https://github.com/balta-io/1972/tree/master/src
+
 # gulp example
 https://github.com/dstroot/skeleton/blob/master/gulpfile.js
+
 # security
 https://blog.jscrambler.com/setting-up-5-useful-middlewares-for-an-express-api/
 https://medium.com/@andy.neale/securing-node-web-applications-5d5f9bc21926
@@ -38,12 +47,17 @@ http://scottksmith.com/blog/2014/09/21/protect-your-node-apps-noggin-with-helmet
 https://github.com/helmetjs/helmet
 https://mathieu.fenniak.net/is-your-web-api-susceptible-to-a-csrf-exploit/
 https://stackoverflow.com/questions/10741339/do-csrf-attacks-apply-to-apis
+
 # web framework
 https://medium.com/@l1ambda/why-you-should-use-koa-with-node-js-7c231a8174fa
 https://expressjs.com/
 https://github.com/koajs/koa
+
 # openshift
 https://github.com/sclorg/nodejs-ex
 https://stackoverflow.com/questions/33636804/how-do-i-modify-the-node-startup-command-in-open-shift
 https://babeljs.io/docs/usage/babel-register/
 https://stackoverflow.com/questions/36516600/how-can-deploy-node-js-application-in-openshift
+
+# async await
+https://github.com/Abazhenov/express-async-handler

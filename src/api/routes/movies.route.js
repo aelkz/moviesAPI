@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import movieCtrl from '../controller/movies.controller';
-import validationRules from '../validation/movies.validation';
+import controller from '../controller/movies.controller';
+import requirements from '../validation/movies.validation';
 import validate from 'express-validation';
 
 /*
@@ -14,13 +14,28 @@ import validate from 'express-validation';
 export default () => {
     const api = Router();
 
-    /************************************************************************
-     * RESOURCE 01 - /movies                                                *
-     * URI para busca (GET) e cadastro (POST) de livros                     *
-     * *********************************************************************/
+    /***********************************************************************
+     * URI used for search (GET) and saving (POST) movies                  *
+     * ********************************************************************/
     api.route('/movies')
-    .get(movieCtrl.load)
-    .post(validate(validationRules.createMovie), movieCtrl.create);
+    .get(controller.get)
+    .post(validate(requirements.createMovie), controller.create);
+
+    /************************************************************************
+     * Internal router                                                      *
+     * URI used for search of an movie by ID (findById) for being used as   *
+     * premise to PUT and PATCH operations. It's used for pre-load the      *
+     * movie object from database.                                          *
+     * *********************************************************************/
+    api.use('/movies/:movieId', controller.loadById);
+
+    /************************************************************************
+     * URI used for search followed by update (PUT) or removal (DELETE)     *
+     * *********************************************************************/
+    api.route('/movies/:movieId')
+        .get(controller.get)
+        .put(controller.update)
+        .delete(controller.remove);
 
     /*------------------------------------------------------
     route.all is extremely useful. you can use it to do
@@ -34,22 +49,6 @@ export default () => {
     //    console.log(req.params);
     //    next();
     //});
-
-    /************************************************************************
-     * RESOURCE 02 INTERNO - /movies/:movieId                               *
-     * URI used for search of an movie by ID (findById) for being used as   *
-     * premise to PUT and PATCH operations. It's used for pre-load the      *
-     * movie object from database.                                          *
-     * *********************************************************************/
-    api.use('/movies/:movieId', movieCtrl.loadById);
-
-    /************************************************************************
-     * RESOURCE 02 - /movies/:movieId                                       *
-     * URI used for search w/ update (PUT)
-     * *********************************************************************/
-    api.route('/movies/:movieId')
-        .get(movieCtrl.get)
-        .put(movieCtrl.update);
 
     return api;
 };

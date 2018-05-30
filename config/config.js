@@ -66,7 +66,7 @@ config.cluster                  = {};
 config.cluster.isMaster         = false;
 
 config.bind                     = {};
-config.bind.port                = 3005;
+config.bind.port                = 8080;
 config.bind.host                = '0.0.0.0';
 
 config.mongo                    = {};

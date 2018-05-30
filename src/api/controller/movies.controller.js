@@ -2,6 +2,11 @@
 
 import repository from '../repository/movies.repository';
 
+/**
+ * Get movie by id
+ * @property {string} req.params.id - The id of the movie.
+ * @returns {Movie}
+ */
 const getById = async(req, res, next) => {
     try {
         var data = await repository.getById(req.params.id);
@@ -15,10 +20,8 @@ const getById = async(req, res, next) => {
 
 /**
  * Get movie
- * @property {string} req.body.id - The id of the movie.
- * @returns {Movie}
+ * @returns {Movie[]}
  */
-
 const get = async(req, res, next) => {
     try {
         var collection = await repository.get();
@@ -33,6 +36,7 @@ const get = async(req, res, next) => {
 /**
  * Create new movie
  * @property {string} req.body.title - The title of the movie.
+ * ...
  * @returns {Movie}
  */
 const create = async(req, res, next) => {
@@ -48,7 +52,7 @@ const create = async(req, res, next) => {
 
 /**
  * Update movie
- * @property {string} req.body.id - The id of the movie.
+ * @property {string} req.params.id - The id of the movie.
  * @returns void
  */
 const update = async(req, res, next) => {
@@ -64,7 +68,7 @@ const update = async(req, res, next) => {
 
 /**
  * Delete movie
- * @property {string} req.body.id - The id of the movie.
+ * @property {string} req.params.id - The id of the movie.
  * @returns void
  */
 const remove = async(req, res, next) => {

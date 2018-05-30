@@ -7,11 +7,11 @@ export default {
             title: Joi.string().min(1).required(),
             parentalGuidance: Joi.string().min(3).required(),
             description: Joi.string().min(10).required(),
-            genreList: Joi.string().valid([
+            genreList: Joi.array().valid([
                 'Action','Adventure','Animation','Biography','Comedy','Crime','Documentary','Drama',
                 'Family','Fantasy','Film Noir','History','Horror','Music','Musical','Mystery','Romance',
                 'Sci-Fi','Short','Sport','Superhero','Thriller','War','Western'
-            ]).required(),
+            ]).items(Joi.string().required()),
             runtime: Joi.string().regex(/^[1-9]{3}$/).required()
         }
     }

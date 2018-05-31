@@ -58,7 +58,23 @@ const create = async(req, res, next) => {
 const update = async(req, res, next) => {
     try {
         const movie = await repository.update(req.params.id, req.body);
-        res.status(201).send(movie);
+        res.status(204).send(movie);
+    }catch (e) {
+        res.status(500).send({
+            message: e.message
+        });
+    }
+};
+
+/**
+ * Patch movie
+ * @property {string} req.params.id - The id of the movie.
+ * @returns void
+ */
+const patch = async(req, res, next) => {
+    try {
+        const movie = await repository.patch(req.params.id, req.body);
+        res.status(204).send(movie);
     }catch (e) {
         res.status(500).send({
             message: e.message
@@ -85,4 +101,4 @@ const remove = async(req, res, next) => {
     }
 };
 
-export default { get, getById, create, remove, update };
+export default { get, getById, create, remove, update, patch };

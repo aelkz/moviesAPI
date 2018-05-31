@@ -20,6 +20,7 @@ const create = async(body) => {
     return res;
 };
 
+// the entire document must be updated.
 const update = async(id, body) => {
     await model
     .findByIdAndUpdate(id, {
@@ -43,8 +44,13 @@ const update = async(id, body) => {
     });
 };
 
+// only parts of the document should be updated.
+const patch = async(id, body) => {
+    await model.update({_id : id}, {$set: body});
+};
+
 const remove = async(id) => {
     await model.findOneAndRemove(id);
 };
 
-export default { get, getById, create, remove, update };
+export default { get, getById, create, remove, update, patch };

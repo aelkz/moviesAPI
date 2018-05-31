@@ -22,11 +22,13 @@ export default () => {
     .post(validate(requirements.createMovie), controller.create);
 
     /************************************************************************
-     * URI used for search followed by update (PUT) or removal (DELETE)     *
+     * URI used for search followed by update (PUT), partial update (PATCH) *
+     * or removal (DELETE)                                                  *
      * *********************************************************************/
     api.route('/movies/:id')
         .get(controller.getById)
         .put(controller.update)
+        .patch(controller.patch)
         .delete(controller.remove);
 
     /*------------------------------------------------------

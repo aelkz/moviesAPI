@@ -4,17 +4,15 @@ https://timonweb.com/posts/how-to-enable-es6-imports-in-nodejs/
 https://www.infoq.com/br/articles/nodejs-utilizando-modulo-de-cluster
 https://www.sitepoint.com/how-to-create-a-node-js-cluster-for-speeding-up-your-apps/
 http://www.acuriousanimal.com/2017/08/12/understanding-the-nodejs-cluster-module.html
+http://www.acuriousanimal.com/2017/08/12/understanding-the-nodejs-cluster-module.html
+https://www.sitepoint.com/how-to-create-a-node-js-cluster-for-speeding-up-your-apps/
+https://www.infoq.com/br/articles/nodejs-utilizando-modulo-de-cluster
 
 # single sign-on (authorization)
 https://apiko.com/blog/express-js-api-and-rest-api-organization-tips-examples-and-techniques/
 
 # reference
 https://developers.google.com/calendar/v3/reference/
-
-# cluster
-http://www.acuriousanimal.com/2017/08/12/understanding-the-nodejs-cluster-module.html
-https://www.sitepoint.com/how-to-create-a-node-js-cluster-for-speeding-up-your-apps/
-https://www.infoq.com/br/articles/nodejs-utilizando-modulo-de-cluster
 
 # design patterns
 https://blog.risingstack.com/fundamental-node-js-design-patterns/
@@ -61,3 +59,8 @@ https://stackoverflow.com/questions/36516600/how-can-deploy-node-js-application-
 
 # async await
 https://github.com/Abazhenov/express-async-handler
+
+# restful design
+https://williamdurand.fr/2014/02/14/please-do-not-patch-like-an-idiot/
+https://blog.risingstack.com/10-best-practices-for-writing-node-js-rest-apis/
+https://github.com/mongodb-js/jsonpatch-to-mongodb

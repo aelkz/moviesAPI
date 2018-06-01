@@ -27,8 +27,8 @@ export default () => {
      * *********************************************************************/
     api.route('/movies/:id')
         .get(controller.getById)
-        .put(controller.update)
-        .patch(controller.patch)
+        .put(validate(requirements.updateMovie), controller.update)
+        .patch(validate(requirements.partialUpdateMovie), controller.patch)
         .delete(controller.remove);
 
     /*------------------------------------------------------
